@@ -2,9 +2,16 @@ data "aws_vpc" "default" {
   default = true
 }
 
-data "aws_subnet" "default" {
-  vpc_id         = data.aws_vpc.default.id
-  availability_zone = "us-east-1a"
+data "aws_subnets" "default" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
+}
+
+# Select the first subnet from the list
+data "aws_subnet" "selected" {
+  id = tolist(data.aws_subnets.default.ids)[0]
 }
 
 resource "aws_security_group" "web_sg" {
