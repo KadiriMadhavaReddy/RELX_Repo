@@ -15,7 +15,7 @@ data "aws_subnet" "selected" {
 }
 
 resource "aws_security_group" "web_sg" {
-  name_prefix = "web-sg-"
+  name_prefix = var.security_group_name
   description = "Allow HTTP and SSH traffic"
   vpc_id      = data.aws_vpc.default.id
 
@@ -41,6 +41,10 @@ resource "aws_security_group" "web_sg" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+  
+  tags = {
+    Name = var.security_group_name
   }
 }
 

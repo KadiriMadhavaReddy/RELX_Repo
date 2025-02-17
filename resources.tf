@@ -1,10 +1,10 @@
 resource "aws_instance" "web" {
-  ami           = "ami-04b4f1a9cf54c11d0" 
-  instance_type = "t2.micro"
+  ami             = var.ami_id
+  instance_type   = var.instance_type
   subnet_id     = data.aws_subnet.selected.id
   security_groups = [aws_security_group.web_sg.name]
   user_data = file("userdata.sh")
-  
+
   depends_on = [aws_security_group.web_sg]
 
   tags = {
