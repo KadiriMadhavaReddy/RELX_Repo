@@ -16,16 +16,6 @@ variable "ami_id" {
   default     = "ami-0c55b159cbfafe1f0"  # Replace with the latest Ubuntu AMI ID
 }
 
-variable "key_name" {
-  description = "AWS Key Pair for SSH access"
-  type        = string
-  default     = "my-key-pair"
-}
-
-variable "subnet_id" {
-  description = "Subnet ID to deploy the instance"
-  type        = string
-}
 
 variable "security_group_name" {
   description = "Security group name for the web server"
