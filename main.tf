@@ -1,30 +1,14 @@
-data "aws_vpc" "default" {
-  default = true
-}
-
-data "aws_subnets" "default" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.default.id]
-  }
-}
-
-# Select the first subnet from the list
-data "aws_subnet" "selected" {
-  id = tolist(data.aws_subnets.default.ids)[0]
-}
-
+# Security Group for EC2 instance
 resource "aws_security_group" "web_sg" {
-  name_prefix = var.security_group_name
+  name        = var.security_group_name
   description = "Allow HTTP and SSH traffic"
-  vpc_id      = data.aws_vpc.default.id
 
   # Allow SSH (port 22)
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # Open to all (modify for security)
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   # Allow HTTP (port 80)
@@ -42,10 +26,22 @@ resource "aws_security_group" "web_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  
-  tags = {
-    Name = var.security_group_name
-  }
+
+  tags = var.tags
 }
 
+# EC2 instance resource
+resource "aws_instance" "web" {
+  ami             = var.ami_id
+  instance_type   = var.instance_type
+  key_name        = var.key_name
+  subnet_id       = var.subnet_id
+  security_groups = [aws_security_group.web_sg.name]
 
+  tags = var.tags
+
+  user_data = file("userdata.sh")
+
+  # Ensure security group is created before instance
+  depends_on = [aws_security_group.web_sg]
+}

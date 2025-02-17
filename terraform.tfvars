@@ -1,12 +1,14 @@
-# AWS Region to use
-aws_region = "us-east-1"
-
-# The AMI ID to use for the EC2 instance (change as per region)
-ami_id = "ami-04b4f1a9cf54c11d0"  # Replace with your desired AMI ID
-
-# EC2 instance type (e.g., t2.micro, t3.medium, etc.)
+# AWS region
+aws_region  = "us-east-1"
+# AMI ID 
+ami_id      = "ami-04b4f1a9cf54c11d0" 
+# Instance type
 instance_type = "t2.micro"
-
-
-# Security group name
+# Subnet ID 
+subnet_id    = "subnet-0278e93d07ae21ca0"  
+# Security group for the EC2 instance
 security_group_name = "web-security-group"
+# Tags to apply to the instance
+tags = {
+  Name = "Terraform-EC2-Instance"
+}
